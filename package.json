@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "build-package": "pnpm --filter @repo/data-ops run build",
+    "pull": "drizzle-kiz pull --config drizzle.config.ts",
     "dev-frontend": "pnpm --filter user-application run dev",
     "dev-data-service": "pnpm --filter data-service run dev",
     "deploy": "npm run build && wrangler deploy",
