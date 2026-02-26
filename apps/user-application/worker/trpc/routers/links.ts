@@ -2,12 +2,13 @@ import { t } from "@/worker/trpc/trpc-instance";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import {
+  getLinks,
   createLink,
   getLink,
-  getLinks,
-  updateLinkDestinations,
   updateLinkName,
+  updateLinkDestinations,
 } from "@repo/data-ops/queries/links";
+import { getLastHourClicks, getLast24Hours, getLast30Days } from "@repo/data-ops/queries/analytics";
 import { createLinkSchema, destinationsSchema } from "@repo/data-ops/zod-schema/links";
 
 // update procedures
@@ -62,4 +63,24 @@ export const linksRouter = t.router({
         .mutation(async ({ input }) => {
           await updateLinkDestinations(input.linkId, input.destinations)
         }),
+        totalLinkClickLastHour: t.procedure.query(async ({ ctx }) => {
+  const clicks = await getLastHourClicks(ctx.userInfo.userId)
+
+  return Number(clicks ?? 0)
+}),
+
+last24HourClicks: t.procedure.query(async ({ ctx }) => {
+  const result = await getLast24Hours(ctx.userInfo.userId)
+
+  return {
+    last24Hours: Number(result?.last24Hours ?? 0),
+    percentChange: Number(result?.percentChange ?? 0),
+  }
+}),
+
+last30DaysClicks: t.procedure.query(async ({ ctx }) => {
+  const count = await getLast30Days(ctx.userInfo.userId)
+
+  return Number(count ?? 0)
+}),
     });

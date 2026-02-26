@@ -1,8 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { trpc } from "@/router";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { Activity, Link, Clock } from "lucide-react";
+import { Activity, Link, Clock, Import } from "lucide-react";
 import { ReactNode } from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getLastHourClicks, getLast24Hours, getLast30Days } from "@repo/data-ops/queries/analytics";
+Import
 
 interface MetricCardProps {
   title: string;
@@ -45,17 +47,19 @@ export function MetricsCards() {
   const { data: clicksLastHour } = useSuspenseQuery(
     trpc.links.totalLinkClickLastHour.queryOptions(undefined, {
       refetchInterval: 5000,
-    }),
+    })
   );
+
   const { data: clicksLast24Hours } = useSuspenseQuery(
     trpc.links.last24HourClicks.queryOptions(undefined, {
       refetchInterval: 5000,
-    }),
+    })
   );
+
   const { data: clicksLast30Days } = useSuspenseQuery(
     trpc.links.last30DaysClicks.queryOptions(undefined, {
       refetchInterval: 5000,
-    }),
+    })
   );
 
   return (
