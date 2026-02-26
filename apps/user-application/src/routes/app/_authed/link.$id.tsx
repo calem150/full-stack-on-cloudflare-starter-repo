@@ -16,7 +16,6 @@ import {
 } from "@/components/link";
 
 import { trpc } from "@/router";
-import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/app/_authed/link/$id")({
   component: RouteComponent,
@@ -32,11 +31,9 @@ export const Route = createFileRoute("/app/_authed/link/$id")({
 function RouteComponent() {
   const { id } = Route.useParams();
 
-  const { data: linkInfo } = useSuspenseQuery(
-    trpc.links.getLink.queryOptions({
-      linkId: id,
-    }),
-  );
+const { data: linkInfo } = trpc.links.getLink.useSuspenseQuery({
+  linkId: id,
+});
 
   const [geoToggle, setGeoToggle] = useState(
     linkInfo ? Object.keys(linkInfo.destinations).length > 1 : false,
